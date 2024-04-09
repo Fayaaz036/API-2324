@@ -1,6 +1,9 @@
 {% layout "layouts/base.liquid" %}
+{% comment %}{% layout "src/index.css" %}{% endcomment %}
+
 
 {% block content %}
+<h2>Welkom bij MovieFlix</h2>
 <ul class="grid">
   {% for movie in movieData.results %}
     {% if movie.original_title %}
