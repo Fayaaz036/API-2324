@@ -1,21 +1,30 @@
 {% layout "layouts/base.liquid" %}
-{% comment %}{% layout "src/index.css" %}{% endcomment %}
 
 
 {% block content %}
-<h2>Welkom bij MovieFlix</h2>
-<ul class="grid">
-  {% for movie in movieData.results %}
-    {% if movie.original_title %}
-      {% assign mov = movie.original_title %}
-    {% else %}
-      {% assign mov = movie.name %}
-    {% endif %}
-    <li>
-      <a href="/movie/{{ movie.id }}">
-        {% render 'components/poster/poster.liquid', movie: movie %}
-      </a>
-    </li>
-  {% endfor %}
-</ul>
+
+<div class="container">
+  <h2 class="divTitle">Trending movies</h2>
+  <div class="carousel">
+    <ul class="trendingMovies">
+      {% comment %}haalt de titel en naam op{% endcomment %}
+      {% for movie in trendingmovieData.results %}
+        {% if movie.original_title %}
+          {% assign mov = movie.original_title %}
+        {% else %}
+          {% assign mov = movie.name %}
+        {% endif %}
+
+        {% comment %}maakt list item met poster.liquid template{% endcomment %}
+        <li>
+          <a href="/movie/{{ movie.id }}">
+            {% render 'components/poster/poster.liquid', movie: movie %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
 {% endblock %}
+
+
