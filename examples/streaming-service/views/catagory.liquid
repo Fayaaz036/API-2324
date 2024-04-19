@@ -1,0 +1,18 @@
+{% layout "layouts/base.liquid" %}
+
+{% block content %}
+<div class="container">
+  <h2 class="divTitle">Category</h2>
+  <div class="carousel">
+    <ul class="trendingMovies">
+      {% for name in genreData %}
+        <li>
+          <a class="genre" href="/catagory/{{ name.id }}">
+            {% render 'components/poster/genre.liquid', name: name.name %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -4,13 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   {% block head %}
-  <title>My First Page</title>
+  <title>MovieFlix</title>
+  <link rel="icon" type="image/png" href="http://localhost:5173/img/logo.png">
+
   {% endblock %}
   {% if NODE_ENV == "development" %}
     <script type="module" src="http://localhost:5173/@vite/client" defer></script>
     <script type="module" src="http://localhost:5173/src/index.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/55dc070dbb.js" crossorigin="anonymous"></script>
+
+
   {% else %}
   <link rel="stylesheet" href="http://localhost:5173/src/index.css">
     <script src="http://localhost:5173/src/main.js" defer></script>
@@ -28,6 +32,7 @@
 <div class="navbar">
   <a href="/" class="nav-item"><i class="fa-solid fa-house"></i> Home</a>
   <a href="/catagory" class="nav-item"><i class="fa-solid fa-list"></i> Category</a>
+  <img src="http://localhost:5173/img/logo.png" class="logo">
   <a href="#" class="nav-item"><i class="fa-solid fa-eye"></i> Watchlist</a>
   <a href="#" class="nav-item"><i class="fa-solid fa-search"></i> Search</a>
 </div>

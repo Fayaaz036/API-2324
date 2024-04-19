@@ -1,4 +1,19 @@
+{% comment %}<div class="poster">{% endcomment %}
+{% comment %}</div>{% endcomment %}
+
+
 <div class="poster">
-  <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="Movieposter for {{ mov }}">
-  <span class="poster__title">{% if movie.title %}{{ movie.title }}{% else %}{{ movie.name }}{% endif %}</span>
+  <section class="artwork">
+    <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="Movieposter for {{ mov }}">
+  </section>
+  <section class="movie_info">
+    <span class="poster__title">{% if movie.title %}{{ movie.title }}{% else %}{{ movie.name }}{% endif %}</span>
+    <p class="movie__info-description">{{ movie.overview }}</p>
+    <dl>
+      <dt>Release date:</dt>
+      <dd>{{ movie.release_date }}</dd>
+      <dt>Rating:</dt>
+      <dd>{{ movie.vote_average }}</dd>
+    </dl>
+  </section>
 </div>

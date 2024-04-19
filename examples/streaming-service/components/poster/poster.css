@@ -1,21 +1,42 @@
 .poster {
-  position: relative;
+  /*position: relative;*/
+  padding-top: 1em;
+  display: flex;
+  width:42em;
+  /*height: 70%;*/
   img {
     width: 100%;
     margin-bottom: 10px;
   }
+
+  }
+
+.artwork{
+  margin-left:5em;
+  width: 15em;
 }
+
+
 
 .poster__title {
   color: white;
-  font-size: 1rem;
+  font-size: 1.5rem;
   margin-bottom: 10px;
-
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px;
   text-align: center;
+}
+.movie__info-description{
+  display: flex;
+margin-top:20px;
+  color: white!important;
+  height:50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.movie_info {
+  margin-left: 2em;
+  width:25%;
+  max-height: 100%;
+  overflow:hidden;
 }

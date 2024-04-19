@@ -1,0 +1,17 @@
+{% layout "layouts/base.liquid" %}
+
+{% block content %}
+<div class="container">
+  {% assign titel = name.name %}
+  <h2 class="divTitle">Category {{ titel }}</h2>
+  <ul class="trendingMovies">
+    {% for movie in trendingmovieData %}
+      <li>
+        <a href="/movie/{{ movie.id }}">
+          {% render 'components/poster/poster.liquid', movie: movie %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  </div>
+{% endblock %}
