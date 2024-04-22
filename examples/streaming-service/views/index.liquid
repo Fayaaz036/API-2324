@@ -1,28 +1,23 @@
 {% layout "layouts/base.liquid" %}
 
-
 {% block content %}
 
 <div class="container">
   <h2 class="divTitle">Trending movies</h2>
-    <ul class="trendingMovies">
-      {% comment %}haalt de titel en naam op{% endcomment %}
-      {% for movie in trendingmovieData.results %}
-        {% if movie.original_title %}
-          {% assign mov = movie.original_title %}
-        {% else %}
-          {% assign mov = movie.name %}
-        {% endif %}
+  <ul class="trendingMovies">
+    {% for movie in trendingmovieData.results %}
+      {% if movie.original_title %}
+        {% assign mov = movie.original_title %}
+      {% else %}
+        {% assign mov = movie.name %}
+      {% endif %}
+      <li class="item loaded">
+        <a href="/movie/{{ movie.id }}">
+          {% render 'components/poster/poster.liquid', movie: movie %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
 
-        {% comment %}maakt list item met poster.liquid template{% endcomment %}
-        <li>
-          <a href="/movie/{{ movie.id }}">
-            {% render 'components/poster/poster.liquid', movie: movie %}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
 {% endblock %}
-
-

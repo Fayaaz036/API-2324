@@ -13,11 +13,12 @@
     <h1 class="h1">{{ mov }}</h1>
     <p class="movie__info-description">{{ movie.overview }}</p>
     <dl>
-      <dt>Release date:</dt>
+      <dt></dt>
       <dd>{{ movie.release_date }}</dd>
-      <dt>Rating:</dt>
+      <dt></dt>
       <dd>{{ movie.vote_average }}</dd>
     </dl>
+    <button id="watchlist" data-movie-id="{{ movieId }}">Add to watchlist </button>
   </div>
 
   <div class="backdrop-image__container">

@@ -10,6 +10,7 @@
   "dependencies": {
     "@tinyhttp/app": "^2.2.3",
     "@tinyhttp/logger": "^2.0.0",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "liquidjs": "^10.10.2",

@@ -83,28 +83,52 @@ body {
 
 }
 
-.genre-poster {
-  width:100%;
-  height:50px;
+
+.catagories{
+  margin: 1em;
+  display:flex;
+  width:90%;
+  flex-wrap: wrap;
+  gap: 1.5em;
+
+}
+.genre-item {
   background: #FF5252;
+  width: 100%;
+  padding: 5px;
+  border: #FF5252 solid 3px;
+  border-radius: 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  border: #FF5252 solid;
-  border-radius: 10px; /* Hier kun je de gewenste radiuswaarde instellen */
-  && h3 {
-    text-align: center;
-    color: white;
-  }
 }
+
+.genre-item:hover {
+  background: #ffcc00;
+  border: #ffcc00 solid 3px;
+}
+
 a.genre {
   font-size: 1.3em;
   text-decoration: none;
 }
-.genre-poster:hover {
-  background-color: #333333;
-  border-color: #333333;
-  && h3 {
-    color: #ffcc00;
-  }
+
+
+/* CSS voor fade-in effect */
+/* CSS voor fade-in effect op afbeeldingen */
+
+.container {
+  margin-bottom: 5em;
+}
+.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+/* CSS voor fade-in effect op afbeeldingen */
+ .item  {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.item.loaded {
+  opacity: 1;
 }

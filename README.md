@@ -1,57 +1,190 @@
 # API @cmda-minor-web 2023 - 2024
 
-Het web is een geweldige plek en de beschikbare technologieën ervan zijn vandaag de dag krachtiger dan ooit tevoren.
-De kracht van het web ligt in het feit dat het een platform is dat voor iedereen beschikbaar is en dat het gebaseerd is
-op open standaarden. De technologieën worden ontworpen en gespecificeerd op basis van consensus en zijn niet in handen
-van één enkele entiteit.
+Ik heb een app gemaakt waarbij je informatie over films kan krijgen en in catagorieen kan kijken welke films er zijn. 
+Deze films kan je aan een watchlist toevoegen, en dan kan je ze later terug vinden.
 
-Desondanks zijn er veel mensen en bedrijven die vinden dat het internet niet voldoet aan hun behoeften. Dit blijkt uit
-de pogingen van grote techbedrijven om hun eigen afgesloten ecosystemen te creëren. Ze streven hiermee naar controle over
-zowel de gebruikerservaring als de gegenereerde data.
 
-**In dit vier weken durende vak zullen we de kracht van het web ervaren en kijken hoe we (mobiele) web apps kunnen maken die
-net zo aantrekkelijk zijn als native mobiele apps. We beginnen met het maken van een server-side gerenderde applicatie
-waarbij we geleidelijk de gebruikerservaring verbeteren met relevante beschikbare web API's.**
+## Functies
+- Films fetchen van The MovieDB en weergeven op de webapp.
+- Kijken op catagorieen.
+- Opslaan van gelikete films met Cookies.
 
-## Doelen
+### Films fetchen van The MovieDB en weergeven op de webapp.
+Om de data op te halen uit de API moet ik een fetch request doen. Hier vraag ik alle data op die in vervolgens in een grote array terug krijg. 
+```js
+app.get('/', async (req, res) => {
+  try {
+  const trendingmovieData = await fetch(`https://api.themoviedb.org/3/trending/all/day?include_adult=false&language=en-US&api_key=${process.env.MOVIEDB_TOKEN}`)
+  .then(res => res.json());
+  res.send(renderTemplate('views/index.liquid', { title: 'Movies', trendingmovieData }));
+  // console.log(trendingmovieData);
+  } catch (error) {
+  console.error(error);
+  res.status(500).send('Error fetching movie data');
+  }
+  });
+```
 
-Na deze cursus zul je:
+Vervolgens haal ik delen uit de array om in te vullen op mijn template.
+```html
+{% layout "layouts/base.liquid" %}
 
-- In staat zijn om een server-side gerenderde applicatie te maken.
-- In staat zijn om een enerverende gebruikerservaring te creëren.
-- Een breder begrip hebben van het web en zijn mogelijkheden.
+{% block content %}
 
-## Opdracht
+<div class="container">
+  <h2 class="divTitle">Trending movies</h2>
+  <ul class="trendingMovies">
+    {% for movie in trendingmovieData.results %}
+      {% if movie.original_title %}
+        {% assign mov = movie.original_title %}
+      {% else %}
+        {% assign mov = movie.name %}
+      {% endif %}
+      <li class="item">
+        <a href="/movie/{{ movie.id }}">
+          {% render 'components/poster/poster.liquid', movie: movie %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
 
-In dit vak zullen we een van de meest voorkomende app-concepten van vandaag gebruiken en ontdekken dat we deze kunnen
-maken met moderne webtechnologie.
+{% endblock %}
+```
+### Kijken op catagorieen.
+Om alle catagorieen op te halen doe ik weer een fetch naar the moviedb. hier vraag ik nu naar alle categorieen die er aanwezig zijn in de API. 
+```js
+app.get('/catagory', async (req, res) => {
+  try {
+    const catagoryMoviesData = await fetch( `https://api.themoviedb.org/3/genre/movie/list?language=en&include_adult=false&api_key=${process.env.MOVIEDB_TOKEN}`)
+      .then(res => res.json());
+    res.send(renderTemplate('views/catagory.liquid', { title: 'Catagory', genreData: catagoryMoviesData.genres }));
+    console.log(catagoryMoviesData.genres);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching movie data');
+  }
+});
+```
 
-Voorbeelden:
+met de response hieruit kan ik de films laden per catagorie en vul ik het template in. 
+```html
+{% layout "layouts/base.liquid" %}
 
-- Maak je eigen streamingplatform (Netflix/Spotify).
-- Maak je eigen doom-scroll-app (Instagram/TikTok).
-- Maak je eigen chatapplicatie (WhatsApp/Signal).
-- Een andere app die je zelf leuk vindt...
+{% block content %}
+<div class="container">
+  {% assign titel = genreId %}
+  <h2 class="divTitle">Category {{ titel }}</h2>
+  <ul class="trendingMovies">
+    {% for movie in trendingmovieData %}
+      <li>
+        <a href="/movie/{{ movie.id }}">
+          {% render 'components/poster/poster.liquid', movie: movie %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  </div>
+{% endblock %}
 
-Voorbeeld content API's die je kan gebruiken:
+```
 
-- [MovieDB API](https://developer.themoviedb.org/reference/intro/getting-started)
-- [Rijksmuseum API](https://data.rijksmuseum.nl/object-metadata/api/)
-- [Spotify API](https://developer.spotify.com/documentation/web-api)
+### Opslaan van gelikete films met Cookies.
+om te beginnen moet ik eerst een cookie aanmaken die de id van de gelikte film bevat. Dat heb ik zo gedaan: 
+```js
+document.getElementById('watchlist').addEventListener('click', function () {
+  // Haal de id van de film op uit de data attribute
+  const movieId = this.getAttribute('data-movie-id');
 
-Voorbeelden van Web API's die je kan gebruiken:
+  // Haal de bestaande gelikete films op uit de cookie of maak een lege array als er geen zijn
+  let likedMovies = getCookie('liked_movies') ? JSON.parse(getCookie('liked_movies')) : [];
 
-- [Page Transition API voor animaties tusse npagina's](https://developer.mozilla.org/en-US/docs/Web/API/Page_Transitions_API)
-- [Web Animations API voor complexe animaties](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API)
-- [Service Worker API voor installable web apps](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
-- [Web Push API voor push notifications](https://developer.mozilla.org/en-US/docs/Web/API/Push_API)
-- [Server sent events voor realtime functionaliteit](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
-- [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
-- [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)
-- [Web Share API voor sharen van content binnen de context van de gebruiker](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share)
-- ...
+  // Controleer of het film-ID al in de array voorkomt
+  if (likedMovies.includes(movieId)) {
+    // Verwijder het film-ID als het al in de array staat
+    likedMovies = likedMovies.filter(id => id !== movieId);
+    console.log(`Movie with id ${movieId} is deleted from list!`);
 
-De lijst is eindeloos, laat je vooral inspireren op de overzichtspagina van [MDN](https://developer.mozilla.org/en-US/docs/Web/API).
+  } else {
+    // Voeg het nieuwe film-ID toe aan de array van gelikete films
+    likedMovies.push(movieId);
+    // Geef een melding aan de gebruiker dat de film geliket is
+    console.log(`Movie with id ${movieId} is liked!`);
+  }
+
+  // Sla de bijgewerkte array van gelikete films op in de cookie
+  setCookie('liked_movies', JSON.stringify(likedMovies), 30); // 30 dagen geldig
+
+});
+
+// Functie om een cookie te krijgen
+function getCookie (name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+// Functie om een cookie in te stellen
+function setCookie (name, value, days) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = `expires=${date.toUTCString()}`;
+  document.cookie = `${name}=${value}; ${expires}; path=/`;
+}
+```
+
+de cookie is nu aangemaakt en bevat een array met id's deze id's. deze moeten nu gebruikt worden in de fetch call naar de api om als film teruggegeven te worden.
+```js
+app.get('/watchlist', async (req, res) => {
+  try {
+    const likedMoviesCookie = req.cookies.liked_movies;
+    const likedMovies = likedMoviesCookie ? JSON.parse(likedMoviesCookie) : [];
+
+    // Log de gelikete film-ID's in de console
+    console.log('Gelikete film-ID\'s:', likedMovies);
+
+    // Haal de filmgegevens op voor elke gelikete film
+    const moviePromises = likedMovies.map(async movieId => {
+      const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${process.env.MOVIEDB_TOKEN}`);
+      return response.json();
+    });
+
+    // Wacht tot alle filmgegevens zijn opgehaald
+    const movie = await Promise.all(moviePromises);
+
+    // Log de filmgegevens in de console
+    console.log('Filmgegevens:', movie);
+
+    // Render de watchlist-pagina met de gelikete film-ID's en filmgegevens
+    res.send(renderTemplate('views/watchlist.liquid', { title: 'Watchlist', likedMovies, movie }));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching movie details');
+  }
+});
+```
+met deze data kan ik mijn template invullen.
+```html
+{% layout "layouts/base.liquid" %}
+
+{% block content %}
+<div class="container">
+  <h2 class="divTitle">Watchlist</h2>
+  <ul class="trendingMovies">
+    {% for movie in movie %}
+      <li>
+        <a href="/movie/{{ movie.id }}">
+          {% render 'components/poster/poster.liquid', movie: movie %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+
+```
+
+
 
 ## Beoordeling
 
@@ -73,11 +206,3 @@ de 3 criteria hieronder moeten voldoen. Een hoger cijfer kan je halen door verde
 | Week 3 - Enhance           | College + workshops | Workshops             | Feedback gesprekken    |
 | Week 4 - Enhance & wrap up | Individuele vragen  | Individuele vragen    | Beoordelingsgesprekken |
 
-## Resources
-
-- Om serverside te kunnen renderen maak ik gebruik van [TinyHttp](https://github.com/tinyhttp), maar je kan ook kiezen voor [Express](https://expressjs.com/).
-- Voor templating maak ik gebruik van [LiquidJS](https://liquidjs.com/), maar je kan ook kiezen voor [EJS](https://ejs.co/).
-- Voor build tooling(CSS en JS) maak ik gebruik van [Vite](https://vitejs.dev/).
-
-Voel je vrij om je eigen technolgieën te kiezen, zolang je maar kan uitleggen waarom je deze hebt gekozen en zolang
-je geen gebruik maakt van een framework zoals React, Vue, Svelte, Angular, etc. 

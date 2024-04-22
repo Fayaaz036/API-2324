@@ -3,8 +3,7 @@
 {% block content %}
 <div class="container">
   <h2 class="divTitle">Category</h2>
-  <div class="carousel">
-    <ul class="trendingMovies">
+    <ul class="catagories">
       {% for name in genreData %}
         <li>
           <a class="genre" href="/catagory/{{ name.id }}">
@@ -13,6 +12,5 @@
         </li>
       {% endfor %}
     </ul>
-  </div>
 </div>
 {% endblock %}
